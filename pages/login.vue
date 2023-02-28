@@ -135,7 +135,7 @@
         </div>
     </div>
 </template>
-<script scoped>
+<script>
     import { mapGetters } from "vuex";
 
     export default {
@@ -152,7 +152,12 @@
                 hasVisiblePassword: false,
             };
         },
-        mounted() {},
+        mounted() {
+            if (this.$auth.user) {
+                console.log('haha');
+                this.$router.push('/');
+            }
+        },
         computed: {
             ...mapGetters({
                 theme: "theme/getTheme",
