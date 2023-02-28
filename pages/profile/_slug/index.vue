@@ -311,7 +311,7 @@
                     text: 'Uploading your image'
                 })
 
-                this.edittingBackgroundPicture
+                this.edittingBackgroundPicture === false
                     ? this.$services.account
                           .uploadProfilePhoto(
                               this.$auth.strategy.token.get("local"),
