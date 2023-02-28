@@ -232,7 +232,6 @@
                 .then((data) => {
                     this.profile = data;
                     this.temporaryProfile = { ...data };
-                    console.log(data);
                 });
 
             this.$services.tweet

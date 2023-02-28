@@ -154,7 +154,6 @@
         },
         mounted() {
             if (this.$auth.user) {
-                console.log('haha');
                 this.$router.push('/');
             }
         },
