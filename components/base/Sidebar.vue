@@ -15,7 +15,7 @@
                 <div class="flex justify-center">
                     <img
                         src="~/assets/images/logo.png"
-                        class="w-[50px] relative left-0" />
+                        class="w-[50px] relative left-0 rotate-45" />
                     <div class="font-semibold pl-2 tracking-tight text-3xl">
                         kekway
                     </div>
