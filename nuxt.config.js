@@ -100,6 +100,11 @@ export default {
       prefix: false,
     }
   ],
+  
+  env: {
+    API_BASE_URL: process.env.API_BASE_URL,
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME
+  },
 
   // Auth Config: https://auth.nuxtjs.org
   auth: {
