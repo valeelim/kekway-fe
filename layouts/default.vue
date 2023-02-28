@@ -5,7 +5,7 @@
         <div class="md:h-screen md:w-[30vw] lg:w-[24vw]">
             <BaseSidebar />
         </div>
-        <div class="grow mt-12 md:mt-0">
+        <div class="grow mt-12 md:mt-0 md:w-[70vw]">
             <Nuxt />
         </div>
     </div>

@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col border rounded-md px-3 sm:px-4 pt-2 sm:pt-3 pb-2 sm:pb-5 border-opacity-20 w-10/12 cursor-pointer shadow-md max-w-full"
+        class="flex flex-col border rounded-md px-3 sm:px-4 pt-2 sm:pt-3 pb-2 sm:pb-5 border-opacity-20 w-10/12 cursor-pointer shadow-md max-w-10/12"
         :class="[
             {
                 'hover:bg-slate-100 hover:bg-opacity-5': !editMode,
@@ -9,9 +9,9 @@
             },
         ]">
         <div
-            class="flex flex-col divide-y divide-slate-700"
+            class="flex flex-col divide-y divide-slate-700 max-w-full"
             :class="{ 'divide-opacity-20': theme === 'light' }">
-            <div class="flex mb-4 w-full">
+            <div class="flex mb-4 max-w-full">
                 <ProfileUserBox :userId="tweet.owner" class="w-3/4" />
                 <v-chip
                     v-if="tweet.close_only"
@@ -29,14 +29,18 @@
                 </v-chip>
                 <div
                     class="relative"
-                    v-if="$auth.user && $auth.user.id === tweet.owner">
+                    v-if="$auth.user && $auth.user.id === tweet.owner && !editMode">
                     <i
                         class="bx bx-dots-vertical-rounded text-xl sm:text-2xl hover:text-gray-500"
                         @click="toggleMenu"
                         v-click-outside="closeMenu"></i>
                     <div
                         v-if="menuIsOpen"
-                        class="rounded-xl border border-sky-100 border-opacity-30 min-w-[80px] sm:min-w-[100px] h-[70px] sm:h-[90px] absolute right-0 sm:left-[10px] bg-[#09132b] flex flex-col justify-center sm:py-4 text-gray-300">
+                        class="rounded-xl border border-opacity-30 min-w-[80px] sm:min-w-[100px] h-[70px] sm:h-[90px] absolute right-0 sm:left-[10px]  flex flex-col justify-center sm:py-4"
+                        :class="[{
+                            'bg-[#09132b] text-gray-300 border-sky-100': theme === 'dark',
+                            'bg-white text-black border-gray-400': theme === 'light'
+                        }]">
                         <div
                             v-if="tweet.owner === $auth.user.id"
                             class="text-cyan-500 pl-2 sm:pl-3 py-2 text-xs sm:text-sm hover:bg-gray-400/30"
@@ -54,14 +58,14 @@
             </div>
             <div
                 v-if="!editMode"
-                class="sm:ml-[4.5rem] mt-[-11px] cursor-text whitespace-pre-wrap pt-2 pb-5 text-sm sm:text-lg"
+                class="sm:ml-[4.5rem] mt-[-11px] cursor-text whitespace-pre-wrap pt-2 pb-5 text-sm sm:text-lg break-all"
                 :class="[
                     {
                         'text-slate-300': theme === 'dark',
                         'text-black': theme === 'light',
                     },
                 ]">
-                <p>{{ tweet.desc }}</p>
+                <p class="max-w-full">{{ tweet.desc }}</p>
             </div>
             <div class="mb-1 sm:mb-3" v-else>
                 <div>
@@ -193,7 +197,6 @@
                         this.$emit("deleteTweet", this.tweet);
                     })
                     .catch((err) => {
-                        console.log("DELETE ERROR", err);
                     });
             },
             save() {

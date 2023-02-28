@@ -76,7 +76,7 @@
                         };
                     })
                     .catch((err) => {
-                        console.log("CAUGHT THE ERRO", err);
+                        
                     });
             }
         },

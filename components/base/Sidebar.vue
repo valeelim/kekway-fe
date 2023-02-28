@@ -366,7 +366,6 @@
                         this.userSearchList = data;
                     })
                     .catch((err) => {
-                        console.log("something went wrong", err);
                     })
                     .finally(() => {
                         this.isFetchingUsers = false;
@@ -402,7 +401,7 @@
                             this.isFetchingFriend = false;
                         })
                         .catch((err) => {
-                            console.log("Something went wrong", err);
+                            
                         });
                 }
             },

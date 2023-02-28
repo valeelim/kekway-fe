@@ -1,7 +1,7 @@
 <template>
-    <div class="flex-col w-full items-center">
+    <div class="flex-col w-full items-center max-w-full">
         <div
-            class="border rounded-lg border-opacity-20 min-h-[90vh] mx-2 my-3 sm:my-4 lg:mx-10  relative shadow-2xl"
+            class="border rounded-lg border-opacity-20 min-h-[90vh] mx-2 my-3 sm:my-4 lg:mx-10 relative shadow-2xl"
             :class="[
                 {
                     'border-sky-200 shadow-cyan-400/10': theme === 'dark',
@@ -14,7 +14,7 @@
                     class="mt-5 object-cover h-full w-full"
                     src="~/assets/images/wall.jpg" />
             </div>
-            <div class="min-h-[100px] sm:min-h-[200px] relative flex">
+            <div class="min-h-[80px] sm:min-h-[170px] relative flex">
                 <div
                     class="flex absolute top-[-40px] left-[10%] sm:left-[40px] lg:top-[-50px] lg:left-[100px]">
                     <div
@@ -72,7 +72,7 @@
                                     $auth.user &&
                                     $route.params.slug === $auth.user.username
                                 "
-                                class="float-right bx bx-edit text-xl sm:text-4xl ml-4 text-gray-400 cursor-pointer "
+                                class="float-right bx bx-edit text-xl sm:text-4xl ml-4 text-gray-400 cursor-pointer"
                                 :class="[
                                     {
                                         'hover:text-black': theme === 'light',
@@ -149,6 +149,20 @@
                 </div>
             </div>
             <div class="w-full flex flex-col items-center mb-10">
+                <div class="float-left w-10/12 mb-7">
+                    <p class="font-semibold text-base sm:text-lg">Bio</p>
+                    <p class="text-sm sm:text-base" v-if="!editProfile">
+                        {{ profile.bio }}
+                    </p>
+                    <p v-else>
+                        <v-textarea
+                            :rows="$vuetify.breakpoint.smAndUp ? '2' : '1'"
+                            v-model="temporaryProfile.bio"
+                            :dark="theme === 'dark'"
+                            auto-grow
+                            class="text-sm sm:text-base"></v-textarea>
+                    </p>
+                </div>
                 <TweetCreateBox
                     v-if="
                         $auth.user && $route.params.slug === $auth.user.username
@@ -191,6 +205,7 @@
                     email: "",
                     name: "",
                     username: "",
+                    bio: "",
                     profile_photo: "",
                 },
                 temporaryProfile: {},
@@ -232,14 +247,14 @@
                     .then((data) => {
                         if (
                             data.find(
-                                (user) => user.username === this.$route.params.slug
+                                (user) =>
+                                    user.username === this.$route.params.slug
                             ) !== undefined
                         ) {
                             this.isCloseFriend = true;
                         }
                     })
-                    .catch((err) => {
-                    });
+                    .catch((err) => {});
             }
         },
         computed: {
@@ -289,9 +304,7 @@
                             location.reload();
                         }, 400);
                     })
-                    .catch((err) => {
-
-                    });
+                    .catch((err) => {});
             },
             deleteTweet(tweet) {
                 this.tweets = this.tweets.filter((tw) => tw.id !== tweet.id);
@@ -306,9 +319,9 @@
             },
             removeCloseFriend() {
                 const loading = this.$vs.loading({
-                    text: 'Removing from close friend :(',
-                    type: 'circles'
-                })
+                    text: "Removing from close friend :(",
+                    type: "circles",
+                });
 
                 this.$services.account
                     .removeCloseFriend(this.$auth.strategy.token.get("local"), {
@@ -317,17 +330,16 @@
                     .then((data) => {
                         this.isCloseFriend = false;
                     })
-                    .catch((err) => {
-                    })
+                    .catch((err) => {})
                     .finally(() => {
                         loading.close();
-                    })
+                    });
             },
             makeCloseFriend() {
                 const loading = this.$vs.loading({
-                    text: 'Making new friend',
-                    type: 'circles'
-                })
+                    text: "Making new friend",
+                    type: "circles",
+                });
                 this.$services.account
                     .makeCloseFriend(this.$auth.strategy.token.get("local"), {
                         friended_id: this.profile.id,
@@ -335,17 +347,16 @@
                     .then((data) => {
                         this.isCloseFriend = true;
                     })
-                    .catch((err) => {
-                    })
+                    .catch((err) => {})
                     .finally(() => {
                         loading.close();
-                    })
+                    });
             },
             saveProfileEdit() {
                 const loading = this.$vs.loading({
-                    text: 'Saving User',
-                    type: 'circles'
-                })
+                    text: "Saving User",
+                    type: "circles",
+                });
 
                 this.$services.account
                     .editBiodata(
@@ -356,18 +367,18 @@
                         this.profile = data;
                         this.temporaryProfile = { ...data };
                         this.$auth.setUser(data);
-                        this.$router.push(`/profile/${data.username}`)
+                        this.$router.push(`/profile/${data.username}`);
                     })
                     .catch((err) => {
                         this.$vs.notification({
-                            title: 'Something went wrong',
-                            text: `Error listed here: ${response.data.message}`
-                        })
+                            title: "Something went wrong",
+                            text: `Error listed here: ${response.data.message}`,
+                        });
                     })
                     .finally(() => {
                         this.editProfile = false;
                         loading.close();
-                    })
+                    });
             },
         },
     };
