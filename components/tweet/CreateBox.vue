@@ -86,13 +86,23 @@
                         close_only: this.closeFriendOnly,
                     })
                     .then((tweet) => {
-                        loading.close();
                         this.$emit("addTweet", tweet);
                         this.desc = "";
                     })
                     .catch((err) => {
-                        console.log("POSTING TWEET ERROR", err);
-                    });
+                        this.$vs.notification({
+                            progress: "auto",
+                            color: "#EF4444",
+                            title: "Something went wrong",
+                            position: "top-center",
+                            text: `${JSON.stringify(
+                                err.response.data.message
+                            )}`,
+                        })
+                    })
+                    .finally(() => {
+                        loading.close();
+                    })
             },
         },
     };

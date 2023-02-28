@@ -12,7 +12,7 @@
             class="flex flex-col divide-y divide-slate-700"
             :class="{ 'divide-opacity-20': theme === 'light' }">
             <div class="flex mb-4 w-full">
-                <ProfileUserBox :userId="tweet.owner" class="w-3/4"/>
+                <ProfileUserBox :userId="tweet.owner" class="w-3/4" />
                 <v-chip
                     v-if="tweet.close_only"
                     class="ma-2 px-[8px] sm:px-[12px]"
@@ -197,10 +197,25 @@
                     });
             },
             save() {
-                if (
-                    this.$_.isEqual(this.tweet, this.temporaryTweet) ||
-                    this.temporaryTweet.desc === ""
-                ) {
+                if (this.$_.isEqual(this.tweet, this.temporaryTweet)) {
+                    this.$vs.notification({
+                        progress: "auto",
+                        color: "#EF4444",
+                        title: "No changes were applied",
+                        position: "top-center",
+                        text: `They were the same`,
+                    });
+                    this.editMode = false;
+                    return;
+                }
+                if (this.temporaryTweet.desc === "") {
+                    this.$vs.notification({
+                        progress: "auto",
+                        color: "#EF4444",
+                        title: "Something went wrong",
+                        position: "top-center",
+                        text: `Tweet must have a description`,
+                    });
                     this.editMode = false;
                     return;
                 }
@@ -221,9 +236,7 @@
                         loading.close();
                         this.$emit("editTweet", data);
                     })
-                    .catch((err) => {
-                        console.log("EDIT TWEET ERROR", err);
-                    });
+                    .catch((err) => {});
             },
             cancel() {
                 this.editMode = false;

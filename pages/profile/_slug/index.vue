@@ -14,7 +14,7 @@
                     class="mt-5 object-cover h-full w-full"
                     src="~/assets/images/wall.jpg" />
             </div>
-            <div class="h-[15vh] sm:h-[20vh] relative flex">
+            <div class="min-h-[100px] sm:min-h-[200px] relative flex">
                 <div
                     class="flex absolute top-[-40px] left-[10%] sm:left-[40px] lg:top-[-50px] lg:left-[100px]">
                     <div
@@ -221,26 +221,26 @@
                 )
                 .then((data) => {
                     this.tweets = data;
-                    console.log(data);
                 })
                 .catch((err) => {
                     // HANDLE ERROR
                 });
 
-            this.$services.account
-                .getCloseFriends(this.$auth.strategy.token.get("local"))
-                .then((data) => {
-                    if (
-                        data.find(
-                            (user) => user.username === this.$route.params.slug
-                        ) !== undefined
-                    ) {
-                        this.isCloseFriend = true;
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
+            if (this.$auth.user) {
+                this.$services.account
+                    .getCloseFriends(this.$auth.strategy.token.get("local"))
+                    .then((data) => {
+                        if (
+                            data.find(
+                                (user) => user.username === this.$route.params.slug
+                            ) !== undefined
+                        ) {
+                            this.isCloseFriend = true;
+                        }
+                    })
+                    .catch((err) => {
+                    });
+            }
         },
         computed: {
             ...mapGetters({

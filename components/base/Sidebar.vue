@@ -328,7 +328,6 @@
         },
         mounted() {
             this.darkMode = this.theme === "dark";
-            console.log(this.$vuetify.breakpoint.md);
         },
         computed: {
             ...mapGetters({
@@ -344,7 +343,12 @@
             },
             async logout() {
                 await this.$auth.logout().catch((err) => {
-                    console.log("Something went wrong", err);
+                    this.$vs.notification({
+                        progress: "auto",
+                        color: "#146e27",
+                        title: "Login Successful",
+                        position: "top-center",
+                    })
                 });
                 location.reload();
             },

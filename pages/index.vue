@@ -55,7 +55,7 @@
                     this.tweets = data;
                 })
                 .catch((err) => {
-                    console.log(err);
+                    
                 })
                 .finally(() => {
                     this.isLoadingTweets = false;

@@ -13,7 +13,6 @@ const TweetService = {
                     resolve(data);
                 })
                 .catch((err) => {
-                    console.log('error here')
                     reject(err);
                 })
         })
