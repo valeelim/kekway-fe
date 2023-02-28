@@ -291,6 +291,7 @@
                 return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqDOokdSSPwYnjA0qJUmuOwi53yPCySZ7WpqBCspRDew&s";
             },
             photoEvent() {
+                console.log(this.edittingBackgroundPicture);
                 if (
                     this.$auth.user &&
                     this.$route.params.slug === this.$auth.user.username &&
@@ -299,8 +300,6 @@
                     this.$refs.uploadPhoto.click();
                 else if (this.edittingBackgroundPicture === false)
                     this.showPhotoDialog = !this.showPhotoDialog;
-
-                this.edittingBackgroundPicture = false;
             },
             onPhotoSelected() {
                 const formData = new FormData(this.$refs.photoForm);
@@ -351,6 +350,7 @@
                           })
                           .catch((err) => {})
                           .finally(() => {
+                            this.edittingBackgroundPicture = false;
                             loading.close();
                           })
             },
