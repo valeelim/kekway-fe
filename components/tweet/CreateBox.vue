@@ -9,7 +9,7 @@
         ]">
         <div class="pt-4">
             <vs-avatar circle :size="$vuetify.breakpoint.mdAndUp ? '60' : '50'">
-                <img :src="getPhoto(profile)" />
+                <img :src="getPhoto(profile)" class="!h-full w-full object-cover"/>
             </vs-avatar>
         </div>
         <div class="flex flex-col ml-6">

@@ -46,7 +46,7 @@
                 <vs-sidebar-item id="profile" class="my-5 lg:text-xl">
                     <template #icon>
                         <vs-avatar circle size="30">
-                            <img :src="getPhoto($auth.user)"
+                            <img :src="getPhoto($auth.user)" class="!h-full w-full object-cover"
                         /></vs-avatar>
                     </template>
                     Profile
