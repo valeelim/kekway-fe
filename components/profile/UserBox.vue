@@ -8,8 +8,8 @@
             },
         ]">
         <div class="mt-1">
-            <vs-avatar circle :size="$vuetify.breakpoint.smAndUp ? '60' : '40'">
-                <img :src="getPhoto(profile)" />
+            <vs-avatar circle :size="$vuetify.breakpoint.smAndUp ? '60' : '40'" class="">
+                <img :src="getPhoto(profile)" class="!h-full w-full object-cover"/>
             </vs-avatar>
         </div>
         <div

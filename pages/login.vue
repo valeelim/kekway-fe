@@ -49,9 +49,14 @@
                         border
                         v-model="password"
                         placeholder="Type your password"
-                        type="password">
+                        type="password"
+                        :visiblePassword="hasVisiblePassword"
+                        @click-icon="hasVisiblePassword = !hasVisiblePassword">
                         <template #icon>
-                            <i class="bx bx-lock-open-alt"></i>
+                            <i
+                                v-if="!hasVisiblePassword"
+                                class="bx bx-show-alt"></i>
+                            <i v-else class="bx bx-hide"></i>
                         </template>
                     </vs-input>
                 </div>
@@ -108,9 +113,14 @@
                         border
                         v-model="password"
                         placeholder="Type your password"
-                        type="password">
+                        type="password"
+                        :visiblePassword="hasVisiblePassword"
+                        @click-icon="hasVisiblePassword = !hasVisiblePassword">
                         <template #icon>
-                            <i class="bx bx-lock-open-alt"></i>
+                            <i
+                                v-if="!hasVisiblePassword"
+                                class="bx bx-show-alt"></i>
+                            <i v-else class="bx bx-hide"></i>
                         </template>
                     </vs-input>
                 </div>
@@ -139,10 +149,10 @@
                 active: "login",
 
                 isLoading: false,
+                hasVisiblePassword: false,
             };
         },
-        mounted() {
-        },
+        mounted() {},
         computed: {
             ...mapGetters({
                 theme: "theme/getTheme",
@@ -151,7 +161,7 @@
         methods: {
             login() {
                 this.isLoading = true;
-                
+
                 this.$auth
                     .loginWith("local", {
                         data: {
@@ -179,7 +189,7 @@
                     })
                     .finally(() => {
                         this.isLoading = false;
-                    })
+                    });
             },
             register() {
                 this.isLoading = true;
@@ -218,7 +228,7 @@
                     })
                     .finally(() => {
                         this.isLoading = false;
-                    })
+                    });
             },
         },
     };

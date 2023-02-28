@@ -84,6 +84,23 @@ const AccountService = {
         })
     },
 
+    editBackgroundPicture(token, data, params=null) {
+        return new Promise((resolve, reject) => {
+            AccountRepository.editBackgroundPicture(data, {
+                headers: {
+                    Authorization: token,
+                },
+                params
+            })
+                .then(({ data }) => {
+                    resolve(data);
+                })
+                .catch((err) => {
+                    reject(err);
+                })
+        })
+    },
+
     getUserById(token, id, params = null) {
         return new Promise((resolve, reject) => {
             AccountRepository.getUserById(id, {

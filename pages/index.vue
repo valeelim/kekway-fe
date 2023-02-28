@@ -25,7 +25,7 @@
                     @editTweet="editTweet" />
             </div>
         </div>
-        <div class="hidden lg:block pl-4 pt-5 max-w-[200px]">
+        <div v-if="$auth.user" class="hidden lg:block pl-4 pt-5 max-w-[200px]">
             <ProfileUserBox v-if="user" :userId="user.id" :key="user.id" />
             <a v-else href="/login">
                 <vs-button>

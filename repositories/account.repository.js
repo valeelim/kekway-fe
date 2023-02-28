@@ -12,6 +12,10 @@ export default {
         return $axios.get(`${resource}/me`, config);
     },
 
+    editBackgroundPicture(data, config=null)  {
+        return $axios.post(`${resourceAccount}/edit-background-picture/`, data, config);
+    },
+
     getUserByUsername(username, config=null) {
         return $axios.get(`${resourceAccount}/get-user-by-username/${username}`, config);
     },

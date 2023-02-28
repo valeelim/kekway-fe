@@ -11,8 +11,9 @@
             <div
                 class="w-[95%] mx-auto aspect-video h-[25vh] sm:h-[30vh] lg:h-[40vh] relative overflow-hidden">
                 <img
-                    class="mt-5 object-cover h-full w-full"
-                    src="~/assets/images/wall.jpg" />
+                    @click="edittingBackgroundPicture = true"
+                    class="mt-5 object-cover h-full w-full cursor-pointer"
+                    :src="getBackgroundPhoto(profile)" />
             </div>
             <div class="min-h-[80px] sm:min-h-[170px] relative flex">
                 <div
@@ -28,9 +29,9 @@
                     <vs-avatar
                         circle
                         :size="$vuetify.breakpoint.smAndUp ? '200' : '110'"
-                        class="hover:cursor-pointer aspect-square"
+                        class="hover:cursor-pointer aspect-square w-full h-full"
                         @click="photoEvent">
-                        <img :src="getPhoto(profile)" />
+                        <img :src="getPhoto(profile)" class="w-full !h-full object-cover" />
                     </vs-avatar>
                     <div
                         v-if="editProfile"
@@ -207,13 +208,17 @@
                     username: "",
                     bio: "",
                     profile_photo: "",
+                    background_photo: "",
                 },
+
+                logo: require('@/assets/images/wall.jpg'),
                 temporaryProfile: {},
                 tweets: [],
                 isCloseFriend: false,
                 hoveringCloseFriend: false,
                 showPhotoDialog: false,
                 editProfile: false,
+                edittingBackgroundPicture: false,
 
                 isLoading: false,
             };
@@ -227,6 +232,7 @@
                 .then((data) => {
                     this.profile = data;
                     this.temporaryProfile = { ...data };
+                    console.log(data);
                 });
 
             this.$services.tweet
@@ -268,43 +274,86 @@
                     this.temporaryProfile = { ...this.profile };
                 }
             },
+            edittingBackgroundPicture(val) {
+                if (val) {
+                    this.photoEvent();
+                }
+            }
         },
         methods: {
+            getBackgroundPhoto(user) {
+                if (user.background_photo)
+                    return `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${user.background_photo}`;
+                return this.logo;
+            },
             getPhoto(user) {
-                if (user.profile_photo) {
+                if (user.profile_photo)
                     return `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${user.profile_photo}`;
-                }
                 return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqDOokdSSPwYnjA0qJUmuOwi53yPCySZ7WpqBCspRDew&s";
             },
             photoEvent() {
                 if (
                     this.$auth.user &&
                     this.$route.params.slug === this.$auth.user.username &&
-                    this.editProfile
+                    (this.editProfile || this.edittingBackgroundPicture)
                 )
                     this.$refs.uploadPhoto.click();
-                else this.showPhotoDialog = !this.showPhotoDialog;
+                else if (this.edittingBackgroundPicture === false)
+                    this.showPhotoDialog = !this.showPhotoDialog;
+
+                this.edittingBackgroundPicture = false;
             },
             onPhotoSelected() {
                 const formData = new FormData(this.$refs.photoForm);
-                this.$services.account
-                    .uploadProfilePhoto(
-                        this.$auth.strategy.token.get("local"),
-                        formData
-                    )
-                    .then((data) => {
-                        this.$vs.notification({
-                            progress: "auto",
-                            color: "#146e27",
-                            title: "Profile photo successfully changed",
-                            position: "top-center",
-                        });
 
-                        setTimeout(() => {
-                            location.reload();
-                        }, 400);
-                    })
-                    .catch((err) => {});
+                const loading = this.$vs.loading({
+                    type: 'circles',
+                    text: 'Uploading your image'
+                })
+
+                this.edittingBackgroundPicture
+                    ? this.$services.account
+                          .uploadProfilePhoto(
+                              this.$auth.strategy.token.get("local"),
+                              formData
+                          )
+                          .then((data) => {
+                              this.$vs.notification({
+                                  progress: "auto",
+                                  color: "#146e27",
+                                  title: "Profile photo successfully changed",
+                                  position: "top-center",
+                              });
+
+                              setTimeout(() => {
+                                  location.reload();
+                              }, 400);
+                          })
+                          .catch((err) => {})
+                          .finally(() => {
+                            loading.close();
+                          })
+                    : this.$services.account
+                          .editBackgroundPicture(
+                              this.$auth.strategy.token.get("local"),
+                              formData
+                          )
+                          .then((data) => {
+                              this.$vs.notification({
+                                  progress: "auto",
+                                  color: "#146e27",
+                                  title: "Background picture successfully changed",
+                                  position: "top-center",
+                              });
+
+                              setTimeout(() => {
+                                  location.reload();
+                              }, 400);
+                          })
+                          .catch((err) => {})
+                          .finally(() => {
+                            loading.close();
+                          })
             },
             deleteTweet(tweet) {
                 this.tweets = this.tweets.filter((tw) => tw.id !== tweet.id);
@@ -372,7 +421,9 @@
                     .catch((err) => {
                         this.$vs.notification({
                             title: "Something went wrong",
-                            text: `Error listed here: ${response.data.message}`,
+                            color: "#EF4444",
+                            position: "top-center",
+                            text: `Error listed here: ${err.response.data.message}`,
                         });
                     })
                     .finally(() => {
